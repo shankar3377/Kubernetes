@@ -12,8 +12,9 @@ Prerequisites:
 
     sudo swapoff -a
     sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+   ![image](https://github.com/user-attachments/assets/df752cfb-58ba-44ec-9d6a-c3c0eb77440e)
 
 
-4. Internet must be enabled on all nodes, because required packages for kubernetes cluster will be downloaded from official repository.
+5. Internet must be enabled on all nodes, because required packages for kubernetes cluster will be downloaded from official repository.
 
 Steps involved to Install Kubernetes Cluster on Ubuntu,
