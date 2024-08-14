@@ -1,7 +1,8 @@
 Prerequisites:
 1. Minimum 2 CPU's with 4Gb Memory is required.
 2. Make an entry of each host in /etc/hosts file for name resolution on all kubernetes nodes as below.
-    itadmin@kubemaster:~$ cat /etc/hosts
+
+   itadmin@kubemaster:~$ cat /etc/hosts
     192.168.123.126 kubemaster
     192.168.123.127 kubenode1
     192.168.123.128 kubenode2
