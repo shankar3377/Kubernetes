@@ -80,7 +80,7 @@ Next, run following echo command to add Kubernetes apt repository.
 ```
    $ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 ```
-## Note: At the time of writing this guide, Kubernetes v1.31 was available, replace this version with new higher version if available.
+### Note: At the time of writing this guide, Kubernetes v1.31 was available, replace this version with new higher version if available.
 
 ### 10. Install Kubectl, Kubeadm and Kubelet
 Install Kubernetes components like kubectl, kubelet and Kubeadm utility on all the nodes. Execute following set of commands,
@@ -93,3 +93,4 @@ Enable the kubelet service before running kubeadm.
 ```
    $ sudo systemctl enable --now kubelet
 ```
+### 11. Initialize Kubernetes Cluster
