@@ -11,7 +11,13 @@ itadmin@kubemaster:~$ cat /etc/hosts
 ```
 
 3. Make sure kubernetes master and worker nodes are reachable between each other.
-4. Kubernetes doesn't support "Swap". Disable Swap on all nodes using below command and also to make it permanent comment out the swap entry in /etc/fstab file.
+
+4. The below command will disable the interactive options while installing anything in server.
+```
+$ echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+```
+
+5. Kubernetes doesn't support "Swap". Disable Swap on all nodes using below command and also to make it permanent comment out the swap entry in /etc/fstab file.
 
 ```
 $ sudo swapoff -a
@@ -21,7 +27,7 @@ $ sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
    
    ![image](https://github.com/user-attachments/assets/df752cfb-58ba-44ec-9d6a-c3c0eb77440e)
 
-5. Load the following kernel modules on all the nodes.
+6. Load the following kernel modules on all the nodes.
 ```
 $ cat >>/etc/modules-load.d/containerd.conf<<EOF
 overlay
@@ -30,7 +36,7 @@ EOF
 $ sudo modprobe overlay
 $ sudo modprobe br_netfilter
 ```
-6. Set the following Kernel parameters for Kubernetes.
+7. Set the following Kernel parameters for Kubernetes.
 ```
 $ cat >>/etc/sysctl.d/kubernetes.conf<<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -39,12 +45,12 @@ net.ipv4.ip_forward                 = 1
 EOF
 ```
 
-7. Apply sysctl params without reboot
+8. Apply sysctl params without reboot
 ```
 $ sudo sysctl --system
 ```
-8. Internet must be enabled on all nodes, because required packages for kubernetes cluster will be downloaded from official repository.
-### 9. Install Containerd Runtime
+9. Internet must be enabled on all nodes, because required packages for kubernetes cluster will be downloaded from official repository.
+### 10. Install Containerd Runtime
    In this guide, we are using containerd runtime for our Kubernetes cluster. So, to install containerd, first install its dependencies.
 ```
 $ sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
@@ -71,7 +77,7 @@ $ sudo systemctl restart containerd
 $ sudo systemctl enable containerd
 ```
 
-### 10. Add Apt Repository for Kubernetes
+### 11. Add Apt Repository for Kubernetes
    Kubernetes package is not available in the default Ubuntu 22.04 package repositories. So we need to add Kubernetes repository. run following command to download public signing key,
 ```
 $ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
@@ -82,7 +88,7 @@ $ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkg
 ```
 ### Note: At the time of writing this guide, Kubernetes v1.31 was available, replace this version with new higher version if available.
 
-### 11. Install Kubectl, Kubeadm and Kubelet
+### 12. Install Kubectl, Kubeadm and Kubelet
 Install Kubernetes components like kubectl, kubelet and Kubeadm utility on all the nodes. Execute following set of commands,
 ```
 $ sudo apt-get update
@@ -94,7 +100,7 @@ Enable the kubelet service before running kubeadm.
 $ sudo systemctl enable --now kubelet
 ```
 After here use only the Master Node
-### 12. Initialize Kubernetes Cluster
+### 13. Initialize Kubernetes Cluster
 Note: apiserver-advertise-address is your k8s-master ip address
 ```
 $ kubeadm init --apiserver-advertise-address=192.168.123.126 --pod-network-cidr=172.16.0.0/16
@@ -115,14 +121,14 @@ Deploy Calico Network
 ```
 $ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
 ```
-### 13. Join the Worker Node to Master Node
+### 14. Join the Worker Node to Master Node
 Copy the __kubeadm token create__ command in the previous step from the master server and run in all the Worker Node.
 
 ```
 Sample format:
 $ kubeadm join 192.168.123.126:6443 --token hp9b0k.1g9tqz8vkf4s5h278ucwf  --discovery-token-ca-cert-hash sha256:32eb67948d72ba99aac9b5bb0305d66a48f43b0798cb2df99c8b1c30708bdc2cased24sf
 ```
-### 14. Verifying the cluster (On k8s-master)
+### 15. Verifying the cluster (On k8s-master)
 Get Kubernetes Cluster Nodes status
 ```
 $ kubectl get nodes
