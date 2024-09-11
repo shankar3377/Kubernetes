@@ -23,7 +23,7 @@ itadmin@kubemaster:~$ cat /etc/hosts
 
 5. Load the following kernel modules on all the nodes.
 ```
-   $ sudo tee /etc/modules-load.d/containerd.conf <<EOF
+   $ cat >>/etc/modules-load.d/containerd.conf<<EOF
    overlay
    br_netfilter
    EOF
