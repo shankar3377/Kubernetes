@@ -71,7 +71,7 @@ Restart and enable containerd service.
    $ sudo systemctl enable containerd
 ```
 
-### 9. Add Apt Repository for Kubernetes
+### 10. Add Apt Repository for Kubernetes
    Kubernetes package is not available in the default Ubuntu 22.04 package repositories. So we need to add Kubernetes repository. run following command to download public signing key,
 ```
    $ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
@@ -82,7 +82,7 @@ Next, run following echo command to add Kubernetes apt repository.
 ```
 ### Note: At the time of writing this guide, Kubernetes v1.31 was available, replace this version with new higher version if available.
 
-### 10. Install Kubectl, Kubeadm and Kubelet
+### 11. Install Kubectl, Kubeadm and Kubelet
 Install Kubernetes components like kubectl, kubelet and Kubeadm utility on all the nodes. Execute following set of commands,
 ```
    $ sudo apt-get update
@@ -94,7 +94,7 @@ Enable the kubelet service before running kubeadm.
    $ sudo systemctl enable --now kubelet
 ```
 After here use only the Master Node
-### 11. Initialize Kubernetes Cluster
+### 12. Initialize Kubernetes Cluster
 Note: apiserver-advertise-address is your k8s-master ip address
 ```
    $ kubeadm init --apiserver-advertise-address=192.168.123.126 --pod-network-cidr=172.16.0.0/16
@@ -115,16 +115,29 @@ Deploy Calico Network
 ```
    $ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
 ```
-### 12. Join the Worker Node to Master Node
+### 13. Join the Worker Node to Master Node
 Copy the __kubeadm token create__ command in the previous step from the master server and run in all the Worker Node.
 
 ```
   Sample format:
-  $ kubeadm join 172.16.0.100:6443 --token hp9b0k.1g9tqz8vkf4s5h278ucwf  --discovery-token-ca-cert-hash sha256:32eb67948d72ba99aac9b5bb0305d66a48f43b0798cb2df99c8b1c30708bdc2cased24sf
+  $ kubeadm join 192.168.123.126:6443 --token hp9b0k.1g9tqz8vkf4s5h278ucwf  --discovery-token-ca-cert-hash sha256:32eb67948d72ba99aac9b5bb0305d66a48f43b0798cb2df99c8b1c30708bdc2cased24sf
 ```
-### 13. Verifying the cluster (On k8s-master)
+### 14. Verifying the cluster (On k8s-master)
 Get Kubernetes Cluster Nodes status
 ```
    $ kubectl get nodes
 ```
 ### __Kubernetes Cluster Setup done__
+
+## Retrive the token and ca-cert-token:
+Get it from Master Node
+```
+   $ openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -pubkey | openssl rsa -pubin -outform DER 2>/dev/null | sha256sum | cut -d' ' -f1
+```
+```
+   $ kubeadm token list
+```
+After retrieving both token and ca-cert-token:
+```
+   $ kubeadm join 172.16.0.100:6443 --token hp9b0k.1g9tqz8vkf4s5h278ucwf --discovery-token-ca-cert-hash sha256:32eb67948d72ba99aac9b5bb0305d66a48f43b0798cb2df99c8b1c30708bdc2cased24sf
+```
