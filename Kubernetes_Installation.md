@@ -116,5 +116,15 @@ Deploy Calico Network
    $ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
 ```
 ### 12. Join the Worker Node to Master Node
-Copy the kubeadm __token create command__ in the previous step from the master server and run here.
- 
+Copy the __kubeadm token create__ command in the previous step from the master server and run in all the Worker Node.
+
+```
+  Sample format:
+  $ kubeadm join 172.16.0.100:6443 --token hp9b0k.1g9tqz8vkf4s5h278ucwf  --discovery-token-ca-cert-hash sha256:32eb67948d72ba99aac9b5bb0305d66a48f43b0798cb2df99c8b1c30708bdc2cased24sf
+```
+### 13. Verifying the cluster (On k8s-master)
+Get Kubernetes Cluster Nodes status
+```
+   $ kubectl get nodes
+```
+### __Kubernetes Cluster Setup done__
