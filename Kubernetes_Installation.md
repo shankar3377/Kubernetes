@@ -93,4 +93,28 @@ Enable the kubelet service before running kubeadm.
 ```
    $ sudo systemctl enable --now kubelet
 ```
+After here use only the Master Node
 ### 11. Initialize Kubernetes Cluster
+Note: apiserver-advertise-address is your k8s-master ip address
+```
+   $ kubeadm init --apiserver-advertise-address=192.168.123.126 --pod-network-cidr=172.16.0.0/16
+```
+   After the initialization is complete, you will see a message with instructions on how to join worker nodes to the cluster. Make a note of the kubeadm join command for future reference.
+
+The below commands are to use in regular user. If you are using root user instead of regular user, please skip the below 3 commands.
+```
+   $ mkdir -p $HOME/.kube
+   $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+Use this below command, if you access via root user.
+```
+   $ export KUBECONFIG=/etc/kubernetes/admin.conf
+```
+Deploy Calico Network
+```
+   $ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
+```
+### 12. Join the Worker Node to Master Node
+Copy the kubeadm __token create command__ in the previous step from the master server and run here.
+ 
