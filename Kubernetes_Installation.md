@@ -117,10 +117,12 @@ Use this below command, if you access via root user.
 ```
 $ export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
-Deploy Calico Network
+Download the Calico networking manifest for the Kubernetes API datastore.
 ```
-$ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
+$ curl https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/calico.yaml -O
+$ kubectl apply -f calico.yaml
 ```
+
 ### 14. Join the Worker Node to Master Node
 Copy the __kubeadm token create__ command in the previous step from the master server and run in all the Worker Node.
 
